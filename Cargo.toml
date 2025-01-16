@@ -3,6 +3,9 @@ name = "gitshift"
 version = "0.1.0"
 authors = ["Rohan Sen <rohansen856@gmail.com>"]
 description = "Git SSH at your fingertips"
+documentation = "https://github.com/rohansen856/gitshift"
+repository = "https://github.com/rohansen856/gitshift"
+license-file = "LICENSE.txt"
 edition = "2021"
 
 [dependencies]
