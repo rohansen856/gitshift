@@ -1,0 +1,16 @@
+[package]
+name = "gitshift"
+version = "0.1.0"
+authors = ["Rohan Sen <rohansen856@gmail.com>"]
+description = "Git SSH at your fingertips"
+edition = "2021"
+
+[dependencies]
+ssh-key = { version = "0.6.0", features = ["rsa", "ed25519"] }
+rand = "0.8.5"
+colored = "3.0.0"
+serde_json = "1.0.137"
+anyhow = "1.0.95"
+directories = "6.0.0"
+clap = { version = "4.5.27", features = ["derive"] }
+serde = { version = "1.0.217", features = ["derive"] }
