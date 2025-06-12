@@ -75,12 +75,9 @@ impl SSHKey {
         println!("{}", "║               PRIVATE KEY                ║".blue());
         println!("{}", "╚══════════════════════════════════════════╝".blue());
         println!(
-            "{}",
-            format!(
-                "{}{}",
-                "⚠️  ".yellow(),
-                "Keep this private!".bold().yellow()
-            )
+            "{}{}",
+            "⚠️  ".yellow(),
+            "Keep this private!".bold().yellow()
         );
         println!("{}", self.private_key.red());
 
@@ -90,10 +87,7 @@ impl SSHKey {
         );
         println!("{}", "║                PUBLIC KEY                ║".green());
         println!("{}", "╚══════════════════════════════════════════╝".green());
-        println!(
-            "{}",
-            format!("{}{}", "🔑 ".cyan(), "Can be shared safely".bold().cyan())
-        );
+        println!("{}{}", "🔑 ".cyan(), "Can be shared safely".bold().cyan());
         println!("{}", self.public_key.green());
     }
 }
