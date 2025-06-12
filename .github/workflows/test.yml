@@ -1,0 +1,21 @@
+name: Test the packaged binary
+
+on:
+  push:
+    branches: '**' 
+  pull_request:
+    branches: '**'
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🦀 Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: clippy, rustfmt
+      - run: cargo test --all
