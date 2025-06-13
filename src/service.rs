@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use colored::Colorize;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use ssh_key::Algorithm;
@@ -138,6 +139,36 @@ impl GitShift {
             .env("GIT_SSH_COMMAND", ssh_command)
             .spawn()?
             .wait()?;
+
+        Ok(())
+    }
+
+    pub fn get_account_info(&self, account_name: &str) -> Result<()> {
+        let accounts = self.load_config()?;
+        let account = accounts
+            .iter()
+            .find(|a| a.name == account_name)
+            .context(format!("Account '{}' not found", account_name))?;
+
+        println!("{}", "Account Information:".bold());
+        println!("{}  {}", "Name:".cyan(), account.name.bold());
+        println!("{}  {}", "Email:".cyan(), account.email);
+        println!(
+            "{}  {}",
+            "SSH Key Path:".cyan(),
+            account.ssh_key_path.display()
+        );
+
+        if let Ok(Some(active)) = self.load_state() {
+            if active == account.name {
+                println!("{}  {}", "Status:".cyan(), "Active".green().bold());
+            } else {
+                println!("{}  {}", "Status:".cyan(), "Inactive".yellow());
+            }
+        }
+
+        println!("\n{}  ", "Public Key:".cyan().bold());
+        println!("{}", account.public_key.green());
 
         Ok(())
     }
