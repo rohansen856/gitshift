@@ -21,4 +21,6 @@ pub enum Commands {
         #[arg(short, long)]
         name: String,
     },
+    /// Get information about a specific account
+    Info { account_name: String },
 }
