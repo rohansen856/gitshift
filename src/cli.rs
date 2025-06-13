@@ -13,13 +13,9 @@ pub enum Commands {
     /// List all available accounts
     Ls,
     /// Activate a specific account
-    Activate {
-        account_name: String,
-    },
+    Activate { account_name: String },
     /// Clone a repository using active account
-    Clone {
-        repo_url: String,
-    },
+    Clone { repo_url: String },
     /// Add a new github account
     Add {
         #[arg(short, long)]
