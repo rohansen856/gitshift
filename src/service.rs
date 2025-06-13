@@ -1,10 +1,10 @@
-use std::process::Command;
-use std::path::PathBuf;
-use std::fs;
+use anyhow::{Context, Result};
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
-use anyhow::{Context, Result};
 use ssh_key::Algorithm;
+use std::fs;
+use std::path::PathBuf;
+use std::process::Command;
 
 use crate::sshkey::SSHKey;
 
@@ -25,10 +25,10 @@ pub struct GitShift {
 
 impl GitShift {
     pub fn new() -> Result<Self> {
-        let proj_dirs = ProjectDirs::from("", "", "gitshift")
-            .context("Could not determine home directory")?;
+        let proj_dirs =
+            ProjectDirs::from("", "", "gitshift").context("Could not determine home directory")?;
         let config_dir = proj_dirs.config_dir();
-        
+
         // Create all required directories
         fs::create_dir_all(config_dir)?;
         let ssh_key_dir = config_dir.join("ssh_keys");
@@ -44,7 +44,7 @@ impl GitShift {
     // Modified to include SSH key management
     pub fn add_account(&self, name: &str, email: &str, algorithm: Algorithm) -> Result<()> {
         let mut accounts = self.load_config()?;
-        
+
         // Check if account exists
         if accounts.iter().any(|a| a.name == name) {
             anyhow::bail!("Account '{}' already exists", name);
@@ -113,23 +113,25 @@ impl GitShift {
         if !accounts.iter().any(|a| a.name == account_name) {
             anyhow::bail!("Account '{}' not found", account_name);
         }
-        
+
         self.save_state(Some(account_name))?;
         println!("Activated account: {}", account_name);
         Ok(())
     }
 
     pub fn clone_repo(&self, repo_url: &str) -> Result<()> {
-        let active_account = self.load_state()?
+        let active_account = self
+            .load_state()?
             .context("No active account. Use 'activate' first")?;
-        
+
         let accounts = self.load_config()?;
-        let account = accounts.iter()
+        let account = accounts
+            .iter()
             .find(|a| a.name == active_account)
             .context("Active account not found in config")?;
 
         let ssh_command = format!("ssh -i {}", account.ssh_key_path.display());
-        
+
         Command::new("git")
             .arg("clone")
             .arg(repo_url)
