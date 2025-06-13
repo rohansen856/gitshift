@@ -18,6 +18,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         Commands::Ls => gitshift.list_accounts()?,
         Commands::Activate { account_name } => gitshift.activate_account(&account_name)?,
         Commands::Clone { repo_url } => gitshift.clone_repo(&repo_url)?,
+        Commands::Info { account_name } => {
+            gitshift.get_account_info(&account_name)?;
+        }
         Commands::Add { name } => {
             let algorithm = Algorithm::Ed25519;
             print!("{}", "Enter email for this account: ".cyan());

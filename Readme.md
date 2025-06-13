@@ -5,7 +5,7 @@
 
 A secure CLI tool for managing multiple GitHub accounts with SSH keys. Switch between work and personal accounts seamlessly! 🔐
 
-![GitShift Demo](https://via.placeholder.com/800x400.png?text=GitShift+Terminal+Demo)
+![GitShift Demo](https://github.com/user-attachments/assets/fb29cf9f-0e87-4ef9-b12a-691cdc15fc48)
 
 ## Features ✨
 
@@ -17,12 +17,12 @@ A secure CLI tool for managing multiple GitHub accounts with SSH keys. Switch be
 
 ## Installation 📦
 
-### From Source (Recommended)
+### From Source
 ```bash
-cargo install --git https://github.com/yourusername/gitshift.git
+cargo install --git https://github.com/rohansen856/gitshift.git
 ```
 
-### From crates.io
+### From crates.io (Recommended)
 ```bash
 cargo install gitshift
 ```
@@ -70,16 +70,17 @@ gitshift clone git@github.com:company/project.git
 
 ## Command Reference 📚
 
-Command	 |    Description	        |     Example
+Command	 |    Description	        |    Example
 add	     |    Create new account	|    gitshift add --name dev --algorithm rsa
 ls	     |    List accounts	        |    gitshift ls
 activate |	  Switch account	    |    gitshift activate personal
 clone	 |    Clone repository	    |    gitshift clone git@github.com:user/repo.git
+info     |    Show account details  |    gitshift info work
 
 ## Development 🛠️
 ### Build Instructions
 ```bash
-git clone https://github.com/yourusername/gitshift.git
+git clone https://github.com/rohansen856/gitshift.git
 cd gitshift
 cargo build --release
 ```
