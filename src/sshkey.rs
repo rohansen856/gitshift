@@ -1,8 +1,8 @@
-use ssh_key::{Algorithm, LineEnding, PrivateKey, PublicKey};
-use std::path::{Path, PathBuf};
-use std::fs;
-use colored::Colorize;
 use anyhow::Result;
+use colored::Colorize;
+use ssh_key::{Algorithm, LineEnding, PrivateKey, PublicKey};
+use std::fs;
+use std::path::{Path, PathBuf};
 
 #[cfg(unix)]
 fn set_file_permissions(path: &Path, mode: u32) -> Result<()> {
@@ -33,7 +33,7 @@ impl SSHKey {
         let key_data = public_key.key_data().clone();
         let public_key = PublicKey::new(key_data, comment).to_string();
 
-        Self::display_colored(&Self{
+        Self::display_colored(&Self {
             private_key: private_key.to_openssh(LineEnding::LF)?.to_string(),
             public_key: public_key.clone(),
             key_dir: key_dir.to_path_buf(),
@@ -68,16 +68,26 @@ impl SSHKey {
         println!("{}", self.key_dir.display().to_string().green());
 
         // Rest of the display logic remains the same
-        println!("\n{}", "╔══════════════════════════════════════════╗".blue());
-        println!("{}",   "║               PRIVATE KEY                ║".blue());
-        println!("{}",   "╚══════════════════════════════════════════╝".blue());
-        println!("{}", format!("{}{}", "⚠️  ".yellow(), "Keep this private!".bold().yellow()));
+        println!(
+            "\n{}",
+            "╔══════════════════════════════════════════╗".blue()
+        );
+        println!("{}", "║               PRIVATE KEY                ║".blue());
+        println!("{}", "╚══════════════════════════════════════════╝".blue());
+        println!(
+            "{}{}",
+            "⚠️  ".yellow(),
+            "Keep this private!".bold().yellow()
+        );
         println!("{}", self.private_key.red());
-        
-        println!("\n{}","╔══════════════════════════════════════════╗".green());
-        println!("{}",  "║                PUBLIC KEY                ║".green());
-        println!("{}",  "╚══════════════════════════════════════════╝".green());
-        println!("{}", format!("{}{}", "🔑 ".cyan(), "Can be shared safely".bold().cyan()));
+
+        println!(
+            "\n{}",
+            "╔══════════════════════════════════════════╗".green()
+        );
+        println!("{}", "║                PUBLIC KEY                ║".green());
+        println!("{}", "╚══════════════════════════════════════════╝".green());
+        println!("{}{}", "🔑 ".cyan(), "Can be shared safely".bold().cyan());
         println!("{}", self.public_key.green());
     }
 }

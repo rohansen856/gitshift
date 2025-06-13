@@ -1,8 +1,8 @@
-use std::{error::Error, io::Write};
 use clap::Parser;
 use colored::Colorize;
 use service::GitShift;
 use ssh_key::Algorithm;
+use std::{error::Error, io::Write};
 
 mod sshkey;
 
@@ -28,7 +28,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
             // Add account with validated parameters
             gitshift.add_account(&name, &email, algorithm.clone())?;
-            
+
             // Display success message
             println!(
                 "{} Added new account '{}' with {} keys",
