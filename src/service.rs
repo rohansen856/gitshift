@@ -4,6 +4,7 @@ use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use ssh_key::Algorithm;
 use std::fs;
+use std::io::Write;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -42,8 +43,7 @@ impl GitShift {
         })
     }
 
-    // Modified to include SSH key management
-    pub fn add_account(&self, name: &str, email: &str, algorithm: Algorithm) -> Result<()> {
+    fn save_acc_info(&self, name: &str, email: &str, algorithm: Algorithm) -> Result<()> {
         let mut accounts = self.load_config()?;
 
         // Check if account exists
@@ -169,6 +169,44 @@ impl GitShift {
 
         println!("\n{}  ", "Public Key:".cyan().bold());
         println!("{}", account.public_key.green());
+
+        Ok(())
+    }
+
+    pub fn add_account(&self) -> Result<()> {
+        let algorithm = Algorithm::Ed25519;
+
+        print!("{}", "Enter a name for this account: ".cyan());
+        std::io::stdout().flush()?;
+        let mut name = String::new();
+        std::io::stdin().read_line(&mut name)?;
+        let name = name.trim().to_string();
+
+        print!("{}", "Enter email for this account: ".cyan());
+        std::io::stdout().flush()?;
+        let mut email = String::new();
+        std::io::stdin().read_line(&mut email)?;
+        let email = email.trim().to_string();
+
+        // Add account with validated parameters
+        self.save_acc_info(&name, &email, algorithm.clone())?;
+
+        // Display success message
+        println!(
+            "{} Added new account '{}' with {} keys",
+            "✓".green(),
+            name.bold(),
+            match algorithm {
+                Algorithm::Ed25519 => "Ed25519",
+                Algorithm::Rsa { .. } => "RSA",
+                Algorithm::Dsa => "DSA",
+                Algorithm::Ecdsa { .. } => "ECDSA",
+                Algorithm::SkEcdsaSha2NistP256 => "SkEcdsaSha2NistP256",
+                Algorithm::SkEd25519 => "SkEd25519",
+                Algorithm::Other(_) => "Other",
+                _ => "Unknown",
+            }
+        );
 
         Ok(())
     }
