@@ -10,7 +10,7 @@ use std::process::Command;
 
 use crate::sshkey::SSHKey;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Account {
     pub name: String,
     pub ssh_key_path: PathBuf,
@@ -206,6 +206,51 @@ impl GitShift {
                 Algorithm::Other(_) => "Other",
                 _ => "Unknown",
             }
+        );
+
+        Ok(())
+    }
+
+    pub fn remove_account(&self) -> Result<()> {
+        let accounts = self.load_config()?;
+        if accounts.is_empty() {
+            println!("No accounts to remove.");
+            return Ok(());
+        }
+
+        println!("Available accounts:");
+        for (i, account) in accounts.iter().enumerate() {
+            println!("{}: {}", i + 1, account.name);
+        }
+
+        print!("{}", "Enter the number to remove the account: ".cyan());
+        std::io::stdout().flush()?;
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input)?;
+        let index: usize = input.trim().parse().context("Invalid input")?;
+
+        if index == 0 || index > accounts.len() {
+            anyhow::bail!("Invalid account number");
+        }
+
+        let account_to_remove = &accounts[index - 1];
+        fs::remove_file(&account_to_remove.ssh_key_path)
+            .context("Failed to remove SSH key file")?;
+
+        let mut updated_accounts = accounts.clone();
+        updated_accounts.remove(index - 1);
+        self.save_config(&updated_accounts)?;
+
+        // Clear state if the removed account was active
+        if self.load_state()? == Some(account_to_remove.name.clone()) {
+            self.save_state(None)?;
+            println!("Cleared active account state.");
+        }
+
+        println!(
+            "{} Removed account '{}' successfully",
+            "✓".green(),
+            account_to_remove.name.bold()
         );
 
         Ok(())
