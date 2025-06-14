@@ -54,6 +54,8 @@ impl SSHKey {
 
         // Save private key with secure permissions
         fs::write(&private_path, &self.private_key)?;
+
+        #[cfg(unix)]
         set_file_permissions(&private_path, 0o600)?;
 
         // Save public key
