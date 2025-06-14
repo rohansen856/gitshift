@@ -18,6 +18,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Commands::Clone { repo_url } => gitshift.clone_repo(&repo_url)?,
         Commands::Info { account_name } => gitshift.get_account_info(&account_name)?,
         Commands::Add => gitshift.add_account()?,
+        Commands::Rm => gitshift.remove_account()?,
     }
 
     Ok(())
