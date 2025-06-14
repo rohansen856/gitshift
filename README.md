@@ -5,7 +5,7 @@
 
 A secure CLI tool for managing multiple GitHub accounts with SSH keys. Switch between work and personal accounts seamlessly! 🔐
 
-![GitShift Demo](https://github.com/user-attachments/assets/fb29cf9f-0e87-4ef9-b12a-691cdc15fc48)
+[![GitShift Demo](https://github.com/user-attachments/assets/fb29cf9f-0e87-4ef9-b12a-691cdc15fc48)]
 
 ## Features ✨
 
@@ -72,7 +72,7 @@ gitshift clone git@github.com:company/project.git
 ## Command Reference 📚
 
 Command	 |    Description	        |    Example
-add	     |    Create new account	|    gitshift add --name dev --algorithm rsa
+add	     |    Create new account	|    gitshift add
 ls	     |    List accounts	        |    gitshift ls
 activate |	  Switch account	    |    gitshift activate personal
 clone	 |    Clone repository	    |    gitshift clone git@github.com:user/repo.git

@@ -17,10 +17,7 @@ pub enum Commands {
     /// Clone a repository using active account
     Clone { repo_url: String },
     /// Add a new github account
-    Add {
-        #[arg(short, long)]
-        name: String,
-    },
+    Add,
     /// Get information about a specific account
     Info { account_name: String },
 }
