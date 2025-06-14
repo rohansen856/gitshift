@@ -1,12 +1,13 @@
 [package]
 name = "gitshift"
-version = "0.1.0"
+version = "0.2.0"
+edition = "2021"
+license = "MIT"
 authors = ["Rohan Sen <rohansen856@gmail.com>"]
-description = "Git SSH at your fingertips"
+description = "Git SSH for managing multiple GitHub accounts"
 documentation = "https://github.com/rohansen856/gitshift"
 repository = "https://github.com/rohansen856/gitshift"
-license = "MIT"
-edition = "2021"
+homepage = "https://github.com/rohansen856/gitshift"
 
 [dependencies]
 ssh-key = { version = "0.6.0", features = ["rsa", "ed25519"] }
