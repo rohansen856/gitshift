@@ -18,6 +18,8 @@ pub enum Commands {
     Clone { repo_url: String },
     /// Add a new github account
     Add,
+    /// Remove an existing github account
+    Rm,
     /// Get information about a specific account
     Info { account_name: String },
 }
