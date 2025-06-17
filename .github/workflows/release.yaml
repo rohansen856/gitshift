@@ -61,19 +61,48 @@ jobs:
       - name: Publish to crates.io
         run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }} --allow-dirty
 
-  github-release:
-    name: Upload Binaries to GitHub Release
+  build-all:
+    name: Build for All Platforms
     needs: test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            name: linux-amd64
+            artifact_name: gitshift
+            asset_name: gitshift-linux-amd64
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            name: darwin-amd64
+            artifact_name: gitshift
+            asset_name: gitshift-macos-amd64
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            name: darwin-arm64
+            artifact_name: gitshift
+            asset_name: gitshift-macos-arm64
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            name: windows-amd64
+            artifact_name: gitshift.exe
+            asset_name: gitshift-windows-amd64.exe
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
         with:
-          name: gitshift
-          path: artifacts/
-      - run: ls -la artifacts/
-      - name: Publish Release
-        uses: softprops/action-gh-release@v2
+          toolchain: stable
+          override: true
+          target: ${{ matrix.target }}
+      - uses: actions-rs/cargo@v1
         with:
-          files: artifacts/gitshift
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          use-cross: true
+          command: build
+          args: --release --target ${{ matrix.target }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+
