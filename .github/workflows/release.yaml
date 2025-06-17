@@ -106,3 +106,29 @@ jobs:
           name: ${{ matrix.name }}
           path: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
 
+  github-release:
+    name: Create GitHub Release
+    needs: build-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: List artifacts
+        run: ls -R artifacts/
+      - name: Prepare release files
+        run: |
+          mkdir release-assets
+          cp artifacts/linux-amd64/gitshift release-assets/gitshift-linux-amd64
+          cp artifacts/darwin-amd64/gitshift release-assets/gitshift-macos-amd64
+          cp artifacts/darwin-arm64/gitshift release-assets/gitshift-macos-arm64
+          cp artifacts/windows-amd64/gitshift.exe release-assets/gitshift-windows-amd64.exe
+          chmod +x release-assets/*
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
